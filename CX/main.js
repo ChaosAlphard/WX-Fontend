@@ -1,23 +1,26 @@
 import Vue from 'vue'
 import App from './App'
 
-import basics from './pages/basics/home.vue'
-Vue.component('basics', basics)
+// Vuex
+import store from './store/store.js'
 
-import components from './pages/component/home.vue'
-Vue.component('components', components)
-
-import plugin from './pages/plugin/home.vue'
-Vue.component('plugin', plugin)
-
+// 自定义组件
 import cuCustom from './colorui/components/cu-custom.vue'
+import main from './pages/main/main.vue'
+import applyFor from './pages/applyfor/applyfor.vue'
+import user from './pages/user/user.vue'
+// 组件挂载
 Vue.component('cu-custom', cuCustom)
+Vue.component('c-main', main)
+Vue.component('apply-for', applyFor)
+Vue.component('user', user)
 
 Vue.config.productionTip = false
 
 App.mpType = 'app'
 
 const app = new Vue({
-  ...App
+    ...App,
+    store
 })
 app.$mount()

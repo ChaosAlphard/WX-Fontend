@@ -1,53 +1,28 @@
 <template>
-  <view>
-    <!-- <basics v-if="PageCur=='basics'"></basics>
-    <components v-if="PageCur=='component'"></components>
-    <plugin v-if="PageCur=='plugin'"></plugin>
-    <view class="cu-bar tabbar bg-white shadow foot">
-      <view class="action" @click="NavChange" data-cur="basics">
-        <view class='cuIcon-cu-image'>
-          <image :src="'/static/tabbar/basics' + [PageCur=='basics'?'_cur':''] + '.png'"></image>
-        </view>
-        <view :class="PageCur=='basics'?'text-green':'text-gray'">元素</view>
+  <view class="content">
+    <apply-for v-if="curPage==='apply-for'" class="comp" :key="'apply-for'"/>
+    <user v-else-if="curPage==='user'" class="comp" :key="'user'"/>
+    <c-main v-else class="comp" :key="'user'"/>
+
+    <!-- Bottom Bar -->
+    <view class="cu-bar tabbar bg-white foot">
+      <!-- 主页 -->
+      <view class="action" data-name="main" @click="changePage"
+      :class="{'text-blue': isCurPage('main')}">
+        <view class="cuIcon-home"></view>
+        <view>主页</view>
       </view>
-      <view class="action" @click="NavChange" data-cur="component">
-        <view class='cuIcon-cu-image'>
-          <image :src="'/static/tabbar/component' + [PageCur == 'component'?'_cur':''] + '.png'"></image>
-        </view>
-        <view :class="PageCur=='component'?'text-green':'text-gray'">组件</view>
+      <!-- 申请 -->
+      <view class="action" data-name="apply-for" @click="changePage"
+      :class="{'text-blue': isCurPage('apply-for')}">
+        <view class="cuIcon-roundadd"></view>
+        <view>申请</view>
       </view>
-      <view class="action" @click="NavChange" data-cur="plugin">
-        <view class='cuIcon-cu-image'>
-          <image :src="'/static/tabbar/plugin' + [PageCur == 'plugin'?'_cur':''] + '.png'"></image>
-        </view>
-        <view :class="PageCur=='plugin'?'text-green':'text-gray'">扩展</view>
-      </view>
-    </view> -->
-    <cu-custom bgColor="bg-gradual-blue" :isBack="true">
-      <block slot="backText">返回</block>
-      <block slot="content">{{curPage}}</block>
-    </cu-custom>
-    <view class="cu-bar tabbar bg-white shadow foot">
-      <!-- 欢迎页 -->
-      <view class="action" @click="NavChange" data-page="main">
-        <view class="cuIcon-similar"></view>
-        <text :class="curPage=='main'?'text-blue':'text-gray'">
-          还没想好
-        </text>
-      </view>
-      <!-- 发布 -->
-      <view class="action add-action" @click="NavChange" data-page="add">
-        <button class="cu-btn cuIcon-add bg-green shadow"></button>
-        <text :class="curPage=='add'?'text-blue':'text-gray'">
-          申请
-        </text>
-      </view>
-      <!-- 个人 -->
-      <view class="action" @click="NavChange" data-page="user">
-        <view class="cuIcon-my"></view>
-        <text :class="curPage=='user'?'text-blue':'text-gray'">
-          个人
-        </text>
+      <!-- 用户 -->
+      <view class="action" data-name="user" @click="changePage"
+      :class="{'text-blue': isCurPage('user')}">
+        <view class="cuIcon-people"></view>
+        <view>用户</view>
       </view>
     </view>
   </view>
@@ -58,17 +33,29 @@
     data: () => ({
       curPage: 'main'
     }),
+    onLoad() {
+      console.log('index load')
+    },
     methods: {
-      NavChange: function(e) {
-        this.curPage = e.currentTarget.dataset.page
+      changePage(ev) {
+        this.curPage = ev.currentTarget.dataset.name
+      },
+      isCurPage(page) {
+        return this.curPage === page
       }
     }
   }
 </script>
 
 <style scoped>
-  .bottom-bar {
-    position: absolute;
-    bottom: 0;
-  }
+.content {
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-direction: column;
+}
+
+.content .comp {
+  position: relative;
+}
 </style>

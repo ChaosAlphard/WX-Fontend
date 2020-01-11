@@ -1,15 +1,20 @@
 {
   //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
   "pages": [{
-    "path": "pages/index/index",
-    "style": {
-      "navigationBarTitleText": "CXInfo"
-    }
-  }, {
-    "path": "pages/applyforRecord/applyforRecord",
-    "style": {
-      "navigationBarTitleText": "申请记录"
-    }
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "CXInfo"
+      }
+    }, {
+      "path": "pages/applyforRecord/applyforRecord",
+      "style": {
+        "navigationBarTitleText": "申请记录"
+      }
+    }, {
+      "path": "pages/manage/manage",
+      "style": {
+        "navigationBarTitleText": "申请管理"
+      }
   }],
   "globalStyle": {
     "navigationBarTextStyle": "black",

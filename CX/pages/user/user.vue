@@ -6,7 +6,7 @@
       :style="'background-image:url('+user.avatarUrl+')'">
         <text class="cuIcon-people"></text>
       </view>
-      <view class="user-name">你好，{{user.nickName}}</view>
+      <view class="user-name">{{!user.nickName?'未登录':'你好，'+user.nickName}}</view>
     </view>
     
     <navigator class="record bg-white section"

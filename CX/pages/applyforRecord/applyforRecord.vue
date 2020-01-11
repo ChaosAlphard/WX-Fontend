@@ -37,7 +37,7 @@ export default {
       if(!res||res.code !== 200) {
         showToast(res.msg)
       }
-      this.recordData = res.data.reverse()
+      this.recordData = res.data
     },
     judgeStatus(status) {
       switch(status) {

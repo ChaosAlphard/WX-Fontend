@@ -1,11 +1,13 @@
 const state = {
   userInfo: null,
-  isLogin: false
+  isLogin: false,
+  level: 0
 }
 
 const getters = {
   getUserInfo: state => state.userInfo,
-  isLogin: state => state.isLogin
+  isLogin: state => state.isLogin,
+  level: state => state.level
 }
 
 const mutations = {
@@ -16,6 +18,10 @@ const mutations = {
   userLogout(state) {
     state.userInfo = null
     state.isLogin = false
+    state.level = 0
+  },
+  setLevel(state, level) {
+    state.level = level
   }
 }
 
@@ -26,6 +32,9 @@ const actions = {
     } else {
       commit("userLogout")
     }
+  },
+  setLevel({commit}, level) {
+    commit("setLevel", level)
   }
 }
 

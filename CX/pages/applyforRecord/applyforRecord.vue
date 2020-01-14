@@ -1,19 +1,18 @@
 <template>
   <view class="record-wrapper">
-    <view class="cu-list menu">
-      <view class="cu-item apply-item" v-for="item in recordData" :key="item.id">
-        <view class="content">
-          <view :class="[judgeStatus(item.judge)]" class="apply-title">
-            [{{judgeText(item.judge)}}] - 申请人：{{item.name}}
-          </view>
-          <view class="apply-content">
-            <text>信息:{{item.message}}</text>
-          </view>
-          <view class="apply-footer">
-            <text>时间:{{item.time}}</text>
-          </view>
+    <view class="apply-list">
+      <navigator class="apply-item" v-for="item in recordData" :key="item.id"
+      :url="'../manage/manage?'+getParams(item)">
+        <view :class="[judgeStatus(item.judge)]" class="apply-title">
+          [{{judgeText(item.judge)}}] - 申请人：{{item.name}}
         </view>
-      </view>
+        <view class="apply-content">
+          信息:{{item.message}}
+        </view>
+        <view class="apply-footer">
+          时间:{{item.time}}
+        </view>
+      </navigator>
     </view>
   </view>
 </template>
@@ -26,10 +25,10 @@ export default {
     recordData: []
   }),
   methods: {
-    async getRecord() {
+    async getRecord(src) {
       const pmsRequest = promisify(uni.request)
       const result = await pmsRequest({
-        url: 'http://192.168.1.54:5000/record/queryall'
+        url: 'http://192.168.1.54:5000/record/'+src
       }).catch(err => {
         showToast('网络异常')
       })
@@ -38,6 +37,9 @@ export default {
         showToast(res.msg)
       }
       this.recordData = res.data
+    },
+    getParams(i){
+      return `id=${i.id}&openid=${i.openid}&name=${i.name}&msg=${i.message}&judge=${i.judge}&time=${i.time}`
     },
     judgeStatus(status) {
       switch(status) {
@@ -68,14 +70,33 @@ export default {
   },
   onLoad(option) {
     console.log(option)
+    if(!option.openid) {
+      showToast('获取openid失败')
+    } else if(option.openid==="manage") {
+      this.getRecord("queryall")
+    } else {
+      this.getRecord("querybyopenid?openid="+option.openid)
+    }
   },
   beforeMount() {
-    this.getRecord()
+    // this.getRecord("record/queryall")
   }
 }
 </script>
 
 <style scoped>
+.apply-list, .apply-item {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-direction: column;
+}
+.apply-item {
+  background-color: #FFFFFF;
+  padding: 20rpx 30rpx;
+  box-sizing: border-box;
+}
 .apply-item:not(:nth-last-child(1)){
   margin-bottom: 1.2rem;
 }
@@ -84,7 +105,10 @@ export default {
 }
 .apply-content {
   font-size: 1.2rem;
-  margin: 18rpx 0;
+  margin: 20rpx 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .apply-footer {
   font-size: 0.8rem;

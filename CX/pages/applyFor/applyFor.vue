@@ -35,6 +35,7 @@ export default {
     usrInput: '',
     btnLoading: false
   }),
+  // 观察者，在指定属性发生变化时触发
   watch: {
     msgInput(newVal, oldVal) {
       if (newVal.trim().length > 30) {
@@ -61,7 +62,7 @@ export default {
   },
   methods: {
     async submit() {
-      //this.btnLoading = true
+      this.btnLoading = true
       const openid = uni.getStorageSync('openid')
       if(!openid) {
         showToast('获取用户信息失败')

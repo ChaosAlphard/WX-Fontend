@@ -78,9 +78,9 @@ export default {
       this.getRecord("querybyopenid?openid="+option.openid)
     }
   },
-  beforeMount() {
+  // beforeMount() {
     // this.getRecord("record/queryall")
-  }
+  // }
 }
 </script>
 

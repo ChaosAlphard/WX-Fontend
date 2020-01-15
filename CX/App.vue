@@ -62,8 +62,7 @@ export default {
           // 用户识别码转换为用户openid和sessionKey
           // 唯有此WXApi返回JSON格式的字符串
           // 且不能由前端调用, 可委托给服务器
-          // 可在服务端处理JSON字符串，也可让前端处理
-          // 目前是前端处理
+          // 可在服务端处理JSON字符串
           this.code2session(code),
           // 用户授权后可获得用户信息
           this.getInfo()

@@ -20,11 +20,11 @@
     </view>
     
     <view class="submit-wrapper" v-if="isLogin&&level===2&&judge==='0'">
-      <button class="submit cu-btn bg-cyan lg" @tap="agree">
-        同意
-      </button>
-      <button class="submit cu-btn bg-red lg" @tap="disagree">
+      <button class="submit cu-btn bg-red lg" :loading="btnLoading" @tap="disagree">
         不同意
+      </button>
+      <button class="submit cu-btn bg-cyan lg" :loading="btnLoading" @tap="agree">
+        同意
       </button>
     </view>
   </view>
@@ -40,7 +40,8 @@ import {promisify, showToast} from '../../common/FnUtil.js'
       name: '',
       msg: '',
       judge: '',
-      time: ''
+      time: '',
+      btnLoading: false
     }),
     computed: {
       isLogin() {
@@ -51,10 +52,68 @@ import {promisify, showToast} from '../../common/FnUtil.js'
       }
     },
     methods: {
-      agree() {
+      async agree() {
+        const res = await promisify(uni.showModal)({
+          title: '同意',
+          content: '确定？决定后就不能反悔了',
+          confirmColor: '#DD514C',
+          cancelColor: '#1CBBB4'
+        }).catch(err => {
+          showToast('调用失败:'+err.message)
+          console.warn(err)
+        })
+        if(res.confirm !== true){
+          showToast('取消')
+          return
+        }
+        this.btnLoading = true
+
+        // 获取订阅
+        // const pmsReqSub = promisify(uni.requestSubscribeMessage)
+        // const res = await pmsReqSub({
+        //   tmplIds: ['AHpAmF18906B5wZ_zsB799T8KHi4wPtK4pL0Ro6a4Ew']
+        // }).catch(err => {
+        //   showToast('订阅失败')
+        //   console.error(err)
+        //   return;
+        // })
+        // if(res['AHpAmF18906B5wZ_zsB799T8KHi4wPtK4pL0Ro6a4Ew'] !== 'accept') {
+        //   showToast('取消订阅后将无法及时接收通知')
+        // }
+        // 获取订阅
+
         this.sendJudge(true)
       },
-      disagree() {
+      async disagree() {
+        const res = await promisify(uni.showModal)({
+          title: '不同意',
+          content: '确定？决定后就不能反悔了',
+          confirmColor: '#DD514C',
+          cancelColor: '#1CBBB4'
+        }).catch(err => {
+          showToast('调用失败:'+err.message)
+          console.warn(err)
+        })
+        if(res.confirm !== true){
+          showToast('取消')
+          return
+        }
+        this.btnLoading = true
+        
+        // 获取订阅
+        // const pmsReqSub = promisify(uni.requestSubscribeMessage)
+        // const res = await pmsReqSub({
+        //   tmplIds: ['AHpAmF18906B5wZ_zsB799T8KHi4wPtK4pL0Ro6a4Ew']
+        // }).catch(err => {
+        //   showToast('订阅失败')
+        //   console.error(err)
+        //   return;
+        // })
+        // if(res['AHpAmF18906B5wZ_zsB799T8KHi4wPtK4pL0Ro6a4Ew'] !== 'accept') {
+        //   showToast('取消订阅后将无法及时接收通知')
+        // }
+        // 获取订阅
+        
         this.sendJudge(false)
       },
       async sendJudge(flag) {
@@ -79,6 +138,8 @@ import {promisify, showToast} from '../../common/FnUtil.js'
         }
         
         console.warn('To do', result)
+        this.judge = flag?'1':'2'
+        this.btnLoading = false
       },
       judgeStatus(status) {
         switch(status) {
@@ -105,15 +166,45 @@ import {promisify, showToast} from '../../common/FnUtil.js'
             return  '待定'
           }
         }
+      },
+      async getApplyforInfo(guid) {
+        const res = await promisify(uni.request)({
+          url: 'http://192.168.1.54:5000/record/getbyguid',
+          data: { guid: guid }
+        }).catch(err => {
+          showToast('获取信息失败')
+          console.error(err)
+          return;
+        })
+        const data = res.data
+        if(!res||res.code!==200) {
+          showToast(res.msg)
+          return
+        }
+        const item = data.model
+        this.id = item.id
+        this.openid = item.openid
+        this.name = item.name
+        this.msg = item.msg
+        this.judge = item.judge
+        this.time = item.time
       }
     },
     onLoad(option) {
-      this.id = option.id
-      this.openid = option.openid
-      this.name = option.name
-      this.msg = option.msg
-      this.judge = option.judge
-      this.time = option.time
+      if(!option.id) {
+        showToast('获取id失败')
+        return
+      }
+      if(!option.judge) {
+        this.getApplyforInfo(option.id)
+      } else {
+        this.id = option.id
+        this.openid = option.openid
+        this.name = option.name
+        this.msg = option.msg
+        this.judge = option.judge
+        this.time = option.time
+      }
     }
   }
 </script>
@@ -148,6 +239,11 @@ import {promisify, showToast} from '../../common/FnUtil.js'
 }
 
 .submit-wrapper {
-  //
+  width: 100%;
+  margin: 2rem 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: row;
 }
 </style>

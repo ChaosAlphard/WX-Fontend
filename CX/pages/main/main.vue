@@ -3,7 +3,7 @@
     <text>主页（可放置使用说明等）</text>
     
     <view class="cu-list menu">
-      <view class="cu-item">level配置(开发only)</view>
+      <view class="cu-item">level快捷切换(开发only)</view>
       <button class="cu-btn lg bg-grey" data-lv="0"
       @tap="changeLevel">
         0: 离职、注册但未激活
